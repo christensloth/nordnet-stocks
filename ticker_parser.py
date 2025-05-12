@@ -19,4 +19,4 @@ class TickerParser:
         tickers = self.__parse_list()
         os.makedirs(self._outputdir, exist_ok=True)
         for ticker in tickers:
-            self._api.make_request(self._datatypes, str(ticker), self._interval, self._observations, self._outputdir)
+            self._api.call(self._datatypes, str(ticker), self._interval, self._observations, self._outputdir)

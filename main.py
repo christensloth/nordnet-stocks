@@ -5,7 +5,7 @@ from  datatypes  import DataType
 Interval should be in format 1d (1 day), 1wk (1 week), 1m (1 month)
 """
 data_interval = "1d"
-observations =  3
+observations =  30
 
 """
 Available datatypes an be seen in datatypes.py

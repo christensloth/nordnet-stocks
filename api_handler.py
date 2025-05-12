@@ -1,27 +1,10 @@
 import requests
-from enum import Enum
-
-class DataType(Enum):
-    Date = 0
-    OpenPrice = 1
-    HighPrice = 2
-    LowPrice = 3
-    ClosePrice = 4
-    Volume = 5
-    AdjustedClose = 6
-
-    def __init__(self, value):
-        self._value_ = value
-
-    @property
-    def int_value(self):
-        return self.value
+from datatypes import DataType
 
 class NewtonApi:
     _base_api = "https://api.newtonanalytics.com/price/?"
     _session = requests.Session()
     _session.headers['Origin'] = _base_api
-
     def __combine_enums(self, enums: DataType):
         return ''.join(str(enum.int_value) for enum in enums)
 
@@ -45,4 +28,4 @@ class NewtonApi:
     """
     def make_request(self, datatypes: DataType, ticker: str, interval: str, observations):
         request = self.__parse_request(datatypes, ticker, interval, observations)
-        return self._session.get(request)
+        return self._session.get(request).json()

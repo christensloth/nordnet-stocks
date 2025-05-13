@@ -10,7 +10,7 @@ observations =  30
 """
 Available datatypes an be seen in datatypes.py
 """
-datatypes = [DataType.Date, DataType.LowPrice, DataType.HighPrice, DataType.OpenPrice, DataType.ClosePrice, DataType.AdjustedClose, DataType.Volume]
+datatypes = [DataType.Date, DataType.OpenPrice, DataType.HighPrice, DataType.LowPrice, DataType.ClosePrice, DataType.Volume]
 
 parser = TickerParser(datatypes, data_interval, observations)
 parser.fetch_tickers()

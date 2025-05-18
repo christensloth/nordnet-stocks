@@ -22,6 +22,11 @@ class DataParser:
     def __parse_timestamp(self, timestamp):
         return datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
 
+    def __parse_header(self):
+        fields = [dtype.str_value for dtype in self.requested_types]
+        fields.insert(1, "Ticker")
+        return fields
+
     def parse_data(self, json_data, ticker: str, destination: str):
         data = json_data['data']
         
@@ -58,6 +63,8 @@ class DataParser:
                 if self.requested_types[i] == DataType.Date:
                     formatted_date = self.__parse_timestamp(value)
                     formatted_row.append(formatted_date)
+                elif i == 1:
+                    formatted_row.append(ticker)
                 else:
                     formatted_row.append(value)
             
@@ -68,5 +75,5 @@ class DataParser:
         
         with open(filename, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
-            writer.writerow([dtype.str_value for dtype in self.requested_types])
+            writer.writerow(self.__parse_header())
             writer.writerows(all_rows)

@@ -1,8 +1,11 @@
 import csv
+import os
 from datetime import datetime
 from datatypes import DataType
 
 class DataParser:
+
+    _output_file = "output.csv"
 
     def __init__(self, datatype_str: str):
         self.requested_types = self.__parse_datatype_str(datatype_str)
@@ -29,51 +32,31 @@ class DataParser:
 
     def parse_data(self, json_data, ticker: str, destination: str):
         data = json_data['data']
-        
-        filename = destination + ticker + ".csv"
-        print("Writing " + ticker + " to: " + filename)
+        new_rows = []
+        print("Writing " + ticker + " to: " + self._output_file)
         print("")
         
-        existing_rows = []
-        try:
-            with open(filename, 'r', newline='') as csvfile:
-                reader = csv.reader(csvfile)
-                headers = next(reader, None)
-                if headers:
-                    date_column = headers.index(DataType.Date.str_value)
-                    existing_rows = list(reader)
-        except FileNotFoundError:
-            pass 
-        
-        existing_dates = {row[date_column] for row in existing_rows} if existing_rows else set()
-        
-        new_rows = []
-        date_column_index = None
-        for i, dtype in enumerate(self.requested_types):
-            if dtype == DataType.Date:
-                date_column_index = i
-                break
-        
-        if date_column_index is None:
-            raise ValueError("Date column not found in requested data types")
-        
-        for row in reversed(data):
-            formatted_row = []
-            for i, value in enumerate(row):
-                if self.requested_types[i] == DataType.Date:
-                    formatted_date = self.__parse_timestamp(value)
-                    formatted_row.append(formatted_date)
-                elif i == 1:
-                    formatted_row.append(ticker)
-                else:
-                    formatted_row.append(value)
-            
-            if formatted_row[date_column_index] not in existing_dates:
-                new_rows.append(formatted_row)
-        
-        all_rows = existing_rows + new_rows
-        
-        with open(filename, 'w', newline='') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow(self.__parse_header())
-            writer.writerows(all_rows)
+        if not os.path.exists(self._output_file):
+            print(f"File {self._output_file} doesn't exist, creating file with header")
+            with open(self._output_file, 'w', newline='') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow(self.__parse_header())
+
+        with open(self._output_file, 'a', newline='') as csvfile:
+            for row in reversed(data):
+                formatted_row = []
+                for i, value in enumerate(row):
+                    if self.requested_types[i] == DataType.Date:
+                        formatted_row.insert(0, self.__parse_timestamp(value))
+                    if self.requested_types[i] == DataType.OpenPrice:
+                        formatted_row.insert(2, value)
+                    if self.requested_types[i] == DataType.HighPrice:
+                        formatted_row.insert(3, value)
+                    if self.requested_types[i] == DataType.LowPrice:
+                        formatted_row.insert(4, value)
+                    if self.requested_types[i] == DataType.ClosePrice:
+                        formatted_row.insert(5, value)
+                    if self.requested_types[i] == DataType.Volume:
+                        formatted_row.insert(6, value)
+                formatted_row.insert(1, ticker)
+                csv.writer(csvfile).writerow(formatted_row)

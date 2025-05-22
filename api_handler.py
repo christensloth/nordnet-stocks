@@ -50,7 +50,7 @@ class NewtonApi:
         print("Failed to establish connection after multiple attempts")
         return None
 
-    def call(self, datatypes: DataType, ticker: str, interval: str, observations, destination: str):
+    def call(self, datatypes: DataType, ticker: str, interval: str, observations):
         parser = DataParser(self.__combine_enums(datatypes))
         data = self.__make_request(datatypes, ticker, interval, observations)
-        parser.parse_data(data, ticker, destination)
+        parser.parse_data(data, ticker)

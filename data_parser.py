@@ -25,12 +25,7 @@ class DataParser:
     def __parse_timestamp(self, timestamp):
         return datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
 
-    def __parse_header(self):
-        fields = [dtype.str_value for dtype in self.requested_types]
-        fields.insert(1, "Ticker")
-        return fields
-
-    def parse_data(self, json_data, ticker: str, destination: str):
+    def parse_data(self, json_data, ticker: str):
         data = json_data['data']
         new_rows = []
         print("Writing " + ticker + " to: " + self._output_file)
@@ -40,7 +35,8 @@ class DataParser:
             print(f"File {self._output_file} doesn't exist, creating file with header")
             with open(self._output_file, 'w', newline='') as csvfile:
                 writer = csv.writer(csvfile)
-                writer.writerow(self.__parse_header())
+                header = ["Date", "Ticker", "Low Price", "High Price", "Open Price", "Close Price", "Volume"]
+                writer.writerow(header)
 
         with open(self._output_file, 'a', newline='') as csvfile:
             for row in reversed(data):

@@ -11,10 +11,10 @@ class TickerParser:
         self._observations = observations
 
     def __parse_list(self, ticker_list):
-        with open('ticker_list', 'r') as file:
+        with open(ticker_list, 'r') as file:
             return [line.strip() for line in file if line.strip()]
 
-    def fetch_tickers(self, ticker_list):
+    def fetch_tickers(self, ticker_list, output: str):
         tickers = self.__parse_list(ticker_list)
         for ticker in tickers:
-            self._api.call(self._datatypes, str(ticker), self._interval, self._observations)
+            self._api.call(self._datatypes, str(ticker), self._interval, self._observations, output)

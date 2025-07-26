@@ -5,10 +5,9 @@ from datatypes import DataType
 
 class DataParser:
 
-    _output_file = "output.csv"
-
-    def __init__(self, datatype_str: str):
+    def __init__(self, datatype_str: str, output: str):
         self.requested_types = self.__parse_datatype_str(datatype_str)
+        self._output_file = output
         
     def __parse_datatype_str(self, datatype_str: str) -> list[DataType]:
         type_map = {

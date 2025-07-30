@@ -5,10 +5,9 @@ from datatypes import DataType
 
 class DataParser:
 
-    _output_file = "output.csv"
-
-    def __init__(self, datatype_str: str):
+    def __init__(self, datatype_str: str, output: str):
         self.requested_types = self.__parse_datatype_str(datatype_str)
+        self._output_file = output
         
     def __parse_datatype_str(self, datatype_str: str) -> list[DataType]:
         type_map = {
@@ -35,7 +34,7 @@ class DataParser:
             print(f"File {self._output_file} doesn't exist, creating file with header")
             with open(self._output_file, 'w', newline='') as csvfile:
                 writer = csv.writer(csvfile)
-                header = ["Date", "Ticker", "Low Price", "High Price", "Open Price", "Close Price", "Volume"]
+                header = ["Date", "Ticker", "Open Price", "High Price", "Low Price", "Close Price", "Volume"]
                 writer.writerow(header)
 
         with open(self._output_file, 'a', newline='') as csvfile:
@@ -44,11 +43,11 @@ class DataParser:
                 for i, value in enumerate(row):
                     if self.requested_types[i] == DataType.Date:
                         formatted_row.insert(0, self.__parse_timestamp(value))
-                    if self.requested_types[i] == DataType.LowPrice:
+                    if self.requested_types[i] == DataType.OpenPrice:
                         formatted_row.insert(2, value)
                     if self.requested_types[i] == DataType.HighPrice:
                         formatted_row.insert(3, value)
-                    if self.requested_types[i] == DataType.OpenPrice:
+                    if self.requested_types[i] == DataType.LowPrice:
                         formatted_row.insert(4, value)
                     if self.requested_types[i] == DataType.ClosePrice:
                         formatted_row.insert(5, value)

@@ -2,9 +2,9 @@ from enum import Enum
 
 class DataType(Enum):
     Date = (0, "Date")
-    OpenPrice = (1, "Open Price")
+    OpenPrice = (3, "Open Price")
     HighPrice = (2, "High Price")
-    LowPrice = (3, "Low Price")
+    LowPrice = (1, "Low Price")
     ClosePrice = (4, "Close Price")
     Volume = (5, "Volume")
     AdjustedClose = (6, "Adjusted Close")

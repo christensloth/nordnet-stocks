@@ -44,11 +44,11 @@ class DataParser:
                     if self.requested_types[i] == DataType.Date:
                         formatted_row.insert(0, self.__parse_timestamp(value))
                     if self.requested_types[i] == DataType.OpenPrice:
-                        formatted_row.insert(2, value)
+                        formatted_row.insert(4, value)
                     if self.requested_types[i] == DataType.HighPrice:
                         formatted_row.insert(3, value)
                     if self.requested_types[i] == DataType.LowPrice:
-                        formatted_row.insert(4, value)
+                        formatted_row.insert(2, value)
                     if self.requested_types[i] == DataType.ClosePrice:
                         formatted_row.insert(5, value)
                     if self.requested_types[i] == DataType.Volume:

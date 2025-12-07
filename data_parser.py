@@ -55,3 +55,4 @@ class DataParser:
                         formatted_row.insert(6, value)
                 formatted_row.insert(1, ticker)
                 csv.writer(csvfile).writerow(formatted_row)
+

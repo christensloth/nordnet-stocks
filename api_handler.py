@@ -10,21 +10,20 @@ class NewtonApi:
     def __init__(self):
         return
 
-    def __combine_enums(self, enums: DataType):
+    def _combine_enums(self, enums: DataType):
         return ''.join(str(enum.int_value) for enum in enums)
     
-    def __parse_request(self, datatypes: DataType, ticker: str, interval: str, observations):
-        datatypes = "&dataType=" + self.__combine_enums(datatypes)
+    def _parse_request(self, datatypes: DataType, ticker: str, interval: str, observations):
+        datatypes = "&dataType=" + self._combine_enums(datatypes)
         ticker = "&ticker=" + ticker
         interval = "&interval=" + interval
         observations = "&observations=" + str(observations)
         return self._base_api + datatypes + ticker + interval + observations
 
-    def __make_request(self, datatypes: DataType, ticker: str, interval: str, observations):
+    def _make_request(self, datatypes: DataType, ticker: str, interval: str, observations):
         max_retries = 3
         retry_delay = 2  # seconds
-        request = self.__parse_request(datatypes, ticker, interval, observations)
-        print("Trying request: " + request)
+        request = self._parse_request(datatypes, ticker, interval, observations)
 
         for attempt in range(max_retries):
             try:
@@ -33,7 +32,6 @@ class NewtonApi:
                 data = response.json()
                 if data['status'] != '200':
                     exit(f"Errorcode was: {data['status']}, reason: {data['data']}")
-                print("API Request for " + ticker + " was successful")
                 return data
 
             except ConnectionError as e:
@@ -51,6 +49,6 @@ class NewtonApi:
         return None
 
     def call(self, datatypes: DataType, ticker: str, interval: str, observations, output: str):
-        parser = DataParser(self.__combine_enums(datatypes), output)
-        data = self.__make_request(datatypes, ticker, interval, observations)
+        parser = DataParser(self._combine_enums(datatypes), output)
+        data = self._make_request(datatypes, ticker, interval, observations)
         parser.parse_data(data, ticker)
